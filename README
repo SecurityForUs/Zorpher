@@ -10,3 +10,4 @@ Client: N/A
 NOTES:
 
 Currently, this program does not install as a PAM module, but is compiled as two binaries.
+If you wish to compile this, run the "build.sh" file for one quick motion.
