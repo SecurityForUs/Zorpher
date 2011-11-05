@@ -6,3 +6,7 @@ The current modules both the server & client rely on:
 
 Server: shadow, crypt, pthread
 Client: N/A
+
+NOTES:
+
+Currently, this program does not install as a PAM module, but is compiled as two binaries.
