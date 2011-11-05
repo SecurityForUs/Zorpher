@@ -1,0 +1,8 @@
+This is a fork of sorts from a previous project I developed under the GitHub username ehzor.
+
+Currently, this uses only the Viegnere Cipher to perform cipher manipulation on the text, but further possibilities will be available later.
+
+The current modules both the server & client rely on:
+
+Server: shadow, crypt, pthread
+Client: N/A
