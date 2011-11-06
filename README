@@ -5,9 +5,15 @@ Currently, this uses only the Viegnere Cipher to perform cipher manipulation on 
 The current modules both the server & client rely on:
 
 Server: shadow, crypt, pthread
-Client: N/A
+Client: Linux-PAM (PAM)
 
 NOTES:
 
-Currently, this program does not install as a PAM module, but is compiled as two binaries.
-If you wish to compile this, run the "build.sh" file for one quick motion.
+If you wish to compile this, please use the "build.sh" script included.  To build the server, use "./build.sh s", and for the client/PAM module, 
+"./build.sh c"
+
+While I cannot confirm this, I feel it is in my best interest to inform anyone who wishes to use this that as this is a C++ PAM module, it can 
+possibly cause conflicts with other modules.  I myself have not had any issues during testing with various modules for login enabled at once, but 
+mangling C & C++ modules could always have some unexpected consequences.  While I will do my best to provide support for this program, Linux machines 
+are natorious for being different from another, so my support will be as best it can be.  I also offer this module and server as-is, and take no 
+responsibility for any damages, direct or indirect.
