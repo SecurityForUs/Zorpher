@@ -24,20 +24,34 @@ int Auth::Shadow(string user, string pass){
 		// Copy first 11 characters of user's password field ($salt$password)
 		strncat(salt, spw->sp_pwdp, 11);
 
+		LOG(("getspnam(): Checking password %s against user %s (salt: %s)", pass.data(), user.data(), salt));
+
 		// Check if user's provided password is correct
 		if(streq(crypt(pass.data(), salt), spw->sp_pwdp))
 			res = 1;
 	} else{
+		LOG(("getspanam() failed, trying getspent()"));
+
 		setspent();
 
+		int i = 0;
+
 		while((spw = getspent()) != (struct spwd*)0){
+			i++;
+
+			LOG(("spw->sp_namp = %s", spw->sp_namp));
+
 			if(streq(spw->sp_namp, user.data())){
 				strncat(salt, spw->sp_pwdp, 11);
+
+				LOG(("getspent(): Checking password %s against user %s (salt: %s)", pass.data(), user.data(), salt));
 
 				if(streq(crypt(pass.data(), salt), spw->sp_pwdp))
 					res = 1;
 			}
 		}
+
+		LOG(("Ran through %d entries in /etc/shadow.", i));
 
 		endspent();
 	}
