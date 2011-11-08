@@ -50,7 +50,7 @@ int Auth::Shadow(string user, string pass){
 	delete[] salt;
 
 	// Make a notice in /var/log/auth.log of the user we are authenticating
-	SYSLOG("Attempting authentication [SHADOW] for user [%s] returned %s", user.data(), ((res == 1) ? "SUCCESS" : "FAILURE"));
+	SYSLOG("Shadow authentication: %s for %s", ((res == 1) ? "SUCCESS" : "FAILURE"), user.data());
 
 	return res;
 }
