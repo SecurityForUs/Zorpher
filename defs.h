@@ -38,15 +38,6 @@
 	} while(0)
 #endif
 
-// Default server IP/host
-#define DEFHOST "192.168.1.42"
-
-// Default port of connection
-#define DEFPORT 5866
-
-// Default buffer for data transmission
-#define DEFBUFF 4098
-
 // Strings are equal
 #define streq(a,b) !strcmp(a,b)
 
