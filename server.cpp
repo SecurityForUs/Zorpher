@@ -77,6 +77,7 @@ int main(int argc, char *argv[]){
 			server.accept(newconn);
 
 			try{
+				// On client connection, try to create a new thread (per connection)
 				threadret = pthread_create(&thread, NULL, ConnThread, static_cast<void*>(&newconn));
 				pthread_join(thread, NULL);
 			} catch(SocketException &e){
