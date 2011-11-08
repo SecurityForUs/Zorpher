@@ -60,7 +60,7 @@ static void parse_options(int argc, const char **argv, struct options *opts){
 #endif
 
 PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, const char *argv[]){
-	// Syslogging for the win!
+	// Syslogging for authentication recording
 	openlog("Zorpher [client]", LOG_ODELAY, LOG_AUTHPRIV);
 
 	// Establishes conversation between PAM and user
