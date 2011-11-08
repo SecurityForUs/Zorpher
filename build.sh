@@ -21,13 +21,6 @@ if [ "$TYPE" == "s" ]; then
 		exit 1
 	fi
 
-#	SHADOW=$(find /usr/lib* -name libshadow.*)
-#
-#	if [ -z "$SHADOW" ]; then
-#		echo "libshadow must be installed."
-#		exit 1
-#	fi
-
 	PTHREAD=$(find /usr/lib* -name libpthread.*)
 
 	if [ -z "$PTHREAD" ]; then
@@ -35,9 +28,9 @@ if [ "$TYPE" == "s" ]; then
 		exit 1
 	fi
 
-#	if [ -n "$CRYPT" ] && [ -n "$SHADOW" ] && [ -n "$PTHREAD" ]; then
 	if [ -n "$CRYPT" ] && [ -n "$PTHREAD" ]; then
 		g++ -O2 -o zorpher server.cpp Socket.cpp ServerSocket.cpp auth.cpp random.cpp vc.cpp -lcrypt -lpthread
+		rm -rf *.o
 	fi
 elif [ "$TYPE" == "c" ]; then
 	echo "Compiling PAM module for Zorpher."
@@ -47,21 +40,7 @@ elif [ "$TYPE" == "c" ]; then
 	g++ -fPIC -shared -lpam client.cpp Socket.cpp ClientSocket.cpp random.cpp vc.cpp -o pam_zorpher.so
 	sudo cp pam_zorpher.so /lib/security/
 
-#	g++ -fPIC -c client.cpp Socket.cpp ClientSocket.cpp random.cpp vc.cpp
-#	sudo ld -x --shared -lpam -o /lib/security/pam_zorpher.so client.o
-
-#	g++ -o zorpher_client.o client.cpp Socket.cpp ClientSocket.cpp random.cpp vc.cpp
-#	ld -G -o /lib/security/pam_zorpher.so zorpher_client.o -lpam
-
 	rm -rf zorpher.o
 fi
 
-#echo "Compiling program..."
-#g++ -g -o client client.cpp Socket.cpp ClientSocket.cpp random.cpp vc.cpp
-#g++ -g -o server server.cpp Socket.cpp ServerSocket.cpp auth.cpp random.cpp vc.cpp -lcrypt -lshadow -lpthread
-
-#if [ -e "server" ]; then
-#	echo "!! Executing server !!"
-
-#	./server
-#fi
+exit 0
