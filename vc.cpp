@@ -1,6 +1,12 @@
 #include "vc.hpp"
 
 /**
+ * TODO:
+ *
+ * Make functions not require input from program (i.e.: use key stored in VC class itself)
+ **/
+
+/**
  * VC()
  * keysize: How big of a key do we want (if smaller than message, key is repeated from beginning to end)
  * range: Alphanumeric range we want to use for table (see notes for more details)
