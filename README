@@ -27,11 +27,6 @@ In the next release, the same options (and more) will be available in the server
 
 NOTES:
 
-If you wish to compile this, please use the "build.sh" script included.  To build the server, use "./build.sh s", and for the client/PAM module, 
-"./build.sh c"
+If you wish to compile this, please use the "build.sh" script included.  To build the server, use "./build.sh s", and for the client/PAM module, "./build.sh c"
 
-While I cannot confirm this, I feel it is in my best interest to inform anyone who wishes to use this that as this is a C++ PAM module, it can 
-possibly cause conflicts with other modules.  I myself have not had any issues during testing with various modules for login enabled at once, but 
-mangling C & C++ modules could always have some unexpected consequences.  While I will do my best to provide support for this program, Linux machines 
-are natorious for being different from another, so my support will be as best it can be.  I also offer this module and server as-is, and take no 
-responsibility for any damages, direct or indirect.
+While I cannot confirm this, I feel it is in my best interest to inform anyone who wishes to use this that as this is a C++ PAM module, it can possibly cause conflicts with other modules.  I myself have not had any issues during testing with various modules for login enabled at once, but mangling C & C++ modules could always have some unexpected consequences.  While I will do my best to provide support for this program, Linux machines are natorious for being different from another, so my support will be as best it can be.  I also offer this module and server as-is, and take no responsibility for any damages, direct or indirect.
