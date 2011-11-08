@@ -4,8 +4,26 @@ Currently, this uses only the Viegnere Cipher to perform cipher manipulation on 
 
 The current modules both the server & client rely on:
 
-Server: shadow, crypt, pthread
+Server: crypt, pthread
 Client: Linux-PAM (PAM)
+
+USAGE:
+
+Server - Must be ran as root, as it requires access to /etc/shadow for authentication means.  Writes both successful and failure messages to syslog (/var/log/auth.log by default).
+Client - Add the following line to any of the /etc/pam.d/* files:
+auth sufficient pam_zorpher.so
+
+Please note that "sufficient" can be replaced with "optional" (if authentication with Zorpher fails continue on, similar to "sufficient"), "requisite" meaning that its part of a chain of log in steps, or "required" meaning that if the user doesn't enter the correct information, then they are denied access.
+
+It is wise to have either "sufficient" or "optional" in place until you are satisfied with the results.
+
+OPTIONS:
+
+The PAM module (client) now has the following options available, which can be placed at the end of the line in any of the /etc/pam.d/* files it is in:
+server=### - Either server hostname (FQDN) or IP address (i.e.: server=auth.example.com or server=200.12.48.5).  This tells the module what computer has the Zorpher server installed
+port=### - The port number that the server is listening on.
+
+In the next release, the same options (and more) will be available in the server.
 
 NOTES:
 

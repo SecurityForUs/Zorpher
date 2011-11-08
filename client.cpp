@@ -28,6 +28,33 @@
 	#endif
 #endif
 
+// Structure for various options allowed
+struct options {
+	char *server;
+	int port;
+};
+
+/**
+ * Parses arguments passed to module.
+ *
+ * Returns nothing.
+ **/
+static void parse_options(int argc, const char **argv, struct options *opts){
+	// Defaults
+	opts->server = "192.168.1.2";
+	opts->port = 5586;
+
+	for(int i = 0; i < argc; i++){
+		// What's the server to connect to?
+		if(strneq(argv[i], "server=", 7))
+			opts->server = (char*)argv[i] + 7;
+
+		// A different port?
+		else if(strneq(argv[i], "port=", 5))
+			opts->port = atoi(argv[i] + 5);
+	}
+}
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
@@ -44,6 +71,9 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, cons
 
 	// User's response during conversation
 	struct pam_response *resp;
+
+	// Structure to parse args
+	struct options opts;
 
 	// Get name of user trying to authenticate
 	const char *user;
@@ -62,6 +92,11 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, cons
 
 	// Generic error holding variable
 	int pam_err = PAM_SUCCESS;
+
+	// Parse options
+	parse_options(argc, argv, &opts);
+
+	SYSLOG("Connecting to %s:%d", opts.server, opts.port);
 
 	// Set up conversation ability with PAM
 	if((pam_err = pam_get_item(pamh, PAM_CONV, (const void**)&conv) != PAM_SUCCESS))
@@ -95,7 +130,7 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, cons
 		}
 
 		// Establishing socket connection
-		ClientSocket socket("192.168.1.42", 5586);
+		ClientSocket socket(opts.server, opts.port);
 
 		VC vc(10, 94);
 
@@ -117,10 +152,11 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, cons
 		socket >> buffer;
 
 		// On success, buffer = OK
-		if(streq(buffer.data(), "OK"))
+		if(streq(buffer.data(), "OK")){
+			SYSLOG("Successful log in attempt: %s", user);
 			pam_err = PAM_SUCCESS;
-		else{
-			LOG(("Invalid log in attempt."));
+		} else{
+			SYSLOG("Invalid log in attempt: %s", user);
 			pam_err = PAM_AUTH_ERR;
 		}
 	}
@@ -133,6 +169,9 @@ PAM_EXTERN int pam_sm_authenticate(pam_handle_t *pamh, int flags, int argc, cons
 
 		free(resp);
 	}
+
+	// Free up any memory used by syslog()
+	closelog();
 
 	return pam_err;
 }
@@ -193,48 +232,3 @@ struct pam_module _pam_zorpher_modstruct = {
 #ifdef __cplusplus
 }
 #endif
-
-/*
-	openlog("Zorpher [client]", LOG_ODELAY, LOG_AUTHPRIV);
-
-	try{
-		ClientSocket socket("localhost", 5586);
-
-		cout << "Attempting connection...\n";
-
-		VC vc(10,94);
-
-		user = "okami";
-		pass = "casycash";
-
-		try{
-			socket >> buffer;
-
-			vc.SetKey(buffer);
-			vc.encrypt(user.c_str(), vc.szGetKey(), enc);
-
-			cout << "Encrypted " << user << " to " << enc << " using key " << vc.GetKey() << "\n";
-			socket << enc;
-
-			vc.encrypt(pass.c_str(), vc.szGetKey(), enc);
-			cout << "Encrypted " << pass << " to " << pass << " using key " << vc.GetKey() << "\n";
-			socket << enc;
-
-			socket >> buffer;
-
-			if(streq(buffer.data(), "OK"))
-				SYSLOG("Successful log in for %s", user.data());
-			else
-				SYSLOG("Failed log in attempt for %s", user.data());
-		} catch(SocketException &e){
-			cout << "Exception: " << e.description() << "\n";
-		}
-
-		cout << "Response recieved: " << buffer << "\n";
-	} catch(SocketException &e){
-		cout << "Exception caught: " << e.description() << "\n";
-	}
-
-	return 0;
-}
-*/

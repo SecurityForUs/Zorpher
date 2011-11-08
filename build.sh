@@ -21,12 +21,12 @@ if [ "$TYPE" == "s" ]; then
 		exit 1
 	fi
 
-	SHADOW=$(find /usr/lib* -name libshadow.*)
-
-	if [ -z "$SHADOW" ]; then
-		echo "libshadow must be installed."
-		exit 1
-	fi
+#	SHADOW=$(find /usr/lib* -name libshadow.*)
+#
+#	if [ -z "$SHADOW" ]; then
+#		echo "libshadow must be installed."
+#		exit 1
+#	fi
 
 	PTHREAD=$(find /usr/lib* -name libpthread.*)
 
@@ -35,8 +35,9 @@ if [ "$TYPE" == "s" ]; then
 		exit 1
 	fi
 
-	if [ -n "$CRYPT" ] && [ -n "$SHADOW" ] && [ -n "$PTHREAD" ]; then
-		g++ -O2 -o zorpher server.cpp Socket.cpp ServerSocket.cpp auth.cpp random.cpp vc.cpp -lcrypt -lshadow -lpthread
+#	if [ -n "$CRYPT" ] && [ -n "$SHADOW" ] && [ -n "$PTHREAD" ]; then
+	if [ -n "$CRYPT" ] && [ -n "$PTHREAD" ]; then
+		g++ -O2 -o zorpher server.cpp Socket.cpp ServerSocket.cpp auth.cpp random.cpp vc.cpp -lcrypt -lpthread
 	fi
 elif [ "$TYPE" == "c" ]; then
 	echo "Compiling PAM module for Zorpher."

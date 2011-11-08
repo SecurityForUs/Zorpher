@@ -53,9 +53,6 @@
 // n numbers of characters are equal
 #define strneq(a, b, n) !strncmp(a,b,n)
 
-// Used for networking code
-#include <enet/enet.h>
-
 // Function to use syslog
 static void SYSLOG(char *f, ...){
 	char buffer[256];

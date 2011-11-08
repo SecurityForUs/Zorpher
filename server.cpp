@@ -79,8 +79,6 @@ int main(int argc, char *argv[]){
 			try{
 				threadret = pthread_create(&thread, NULL, ConnThread, static_cast<void*>(&newconn));
 				pthread_join(thread, NULL);
-
-				LOG(("Thread return status: %d (%s)", threadret, ((threadret == 0) ? "OK" : "Error")));
 			} catch(SocketException &e){
 				cout << "Exception: " << e.description() << "\n";
 			}

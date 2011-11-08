@@ -132,11 +132,9 @@ int VC::ret_range(int min, int max, int val){
  * NOTE: return of key() should always be the same as bytes_read!!!
  **/
 int VC::key(){
-	LOG(("Generating a key of size %d with a total of %d possible characters.", VC_KEY, MODULO));
-
 	int bytes_read = VC_KEY;
 
-        int res, tmp, min, max = 0;
+        int res, vtmp, min, max = 0;
 
         // Allocate a big enough buffer to hold x bytes of data
 	string buff;
@@ -155,21 +153,19 @@ int VC::key(){
                 max = 126;
         }
 
-        tmp = 0;
+        vtmp = 0;
 
-	while(tmp < bytes_read){
-		res = ret_range(min, max, (int)buff[tmp]);
+	while(vtmp < bytes_read){
+		res = ret_range(min, max, (int)buff[vtmp]);
 
-		vkey[tmp] = res;
+		vkey[vtmp] = res;
 
-		tmp++;
+		vtmp++;
 	}
-
-	LOG(("-> VC::key() = %s (%d)", vkey.data(), tmp));
 
 	buff.clear();
 
-        return tmp;
+        return vtmp;
 }
 
 /**

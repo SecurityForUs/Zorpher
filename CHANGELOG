@@ -1,0 +1,18 @@
+v1.2 - 11/08/2011
+--------------------
+- Cleaned up source code
+- Added options for PAM module
+- Updated README
+- Added CHANGELOG
+- Modified build.sh script:
+>> Removed -lshadow dependency (was causing issues compiling on Ubuntu)
+- Performed testing on other systems (initally only tested on Arch Linux)
+>> Working on fixing all warnings given by g++
+
+v1.1 - 11/07/2011
+--------------------
+Completion of PAM module (client)
+
+v1.0 - 11/06/2011
+--------------------
+Initial release on GitHub
