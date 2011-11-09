@@ -32,8 +32,6 @@ void *ConnThread(void *data){
 	string user;
 	string pass;
 
-	Auth a;
-
 	ServerSocket *conn = static_cast<ServerSocket*>(data);
 
 	// Create a Viegnere Cipher key
@@ -53,8 +51,11 @@ void *ConnThread(void *data){
 	// Do the same
 	vc.decrypt(buff.c_str(), vc.szGetKey(), pass);
 
+	// Perform authentication method
+	Auth a(AUTH_SHADOW, user, pass);
+
 	// If authentication worked, send OK msg
-	if(a.Shadow(user, pass))
+	if(a.GetAuth())
 		conn->Send("OK");
 	else
 		conn->Send("FAIL");
@@ -62,15 +63,23 @@ void *ConnThread(void *data){
 	conn = NULL;
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, const char *argv[]){
 	openlog("Zorpher [server]", LOG_ODELAY, LOG_AUTHPRIV);
+
+	struct options opts;
+
+	parse_options(argc, argv, &opts);
 
 	pthread_t thread;
 
 	int threadret;
 
 	try{
-		ServerSocket server(5586);
+		LOG(("Server: %s:%d", opts.server, opts.port));
+
+		ServerSocket server(opts.server, opts.port);
+
+		SYSLOG("Running on %s:%d", opts.server, opts.port);
 
 		while(1){
 			ServerSocket newconn;
@@ -81,7 +90,7 @@ int main(int argc, char *argv[]){
 				threadret = pthread_create(&thread, NULL, ConnThread, static_cast<void*>(&newconn));
 				pthread_join(thread, NULL);
 			} catch(SocketException &e){
-				cout << "Exception: " << e.description() << "\n";
+				cout << "Socket exception: " << e.description() << "\nExiting.\n";
 			}
 		}
 	} catch(SocketException &e){
