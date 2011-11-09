@@ -58,11 +58,6 @@ int Auth::Shadow(string user, string pass){
 		// I prefer doing this via C++...but GetSalt() is causing issues currently when using C++
 		sprintf(salt, "%s", GetSalt(spw->sp_pwdp));
 
-		// Copy first 11 characters of user's password field ($salt$password)
-		//strncat(salt, spw->sp_pwdp, 11);
-
-		LOG(("Checking %s against %s (salt: %s)", user.data(), pass.data(), salt));
-
 		// Check if user's provided password is correct
 		if(streq(crypt(pass.data(), salt), spw->sp_pwdp))
 			res = 1;
