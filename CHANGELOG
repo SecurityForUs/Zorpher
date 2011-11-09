@@ -1,3 +1,9 @@
+v1.2.1 - 11/08/2011
+--------------------
+- Resolved some warning messages given by g++
+- Added ability to authenticate via shadow files having $rounds=...$ option
+- Modified socket code slightly to allow server binding to specified IP (defaults to 0.0.0.0)
+
 v1.2 - 11/08/2011
 --------------------
 - Cleaned up source code
