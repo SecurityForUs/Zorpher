@@ -55,10 +55,11 @@ int Auth::Shadow(string user, string pass){
 
 	// Attempt to load user information from shadow file into structure
 	if((spw = getspnam(user.data())) != (struct spwd*)0){
-		LOG(("Salt for %s found: %s", user.data(), GetSalt(spw->sp_pwdp)));
+		// I prefer doing this via C++...but GetSalt() is causing issues currently when using C++
+		sprintf(salt, "5s", GetSalt(spw->sp_pwdp));
 
 		// Copy first 11 characters of user's password field ($salt$password)
-		strncat(salt, spw->sp_pwdp, 11);
+		//strncat(salt, spw->sp_pwdp, 11);
 
 		// Check if user's provided password is correct
 		if(streq(crypt(pass.data(), salt), spw->sp_pwdp))
