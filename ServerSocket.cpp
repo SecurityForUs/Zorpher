@@ -4,14 +4,14 @@
 #include "SocketException.h"
 
 
-ServerSocket::ServerSocket ( int port )
+ServerSocket::ServerSocket ( std::string host, int port )
 {
   if ( ! Socket::create() )
     {
       throw SocketException ( "Could not create server socket." );
     }
 
-  if ( ! Socket::bind ( port ) )
+  if ( ! Socket::bind ( host, port ) )
     {
       throw SocketException ( "Could not bind to port." );
     }

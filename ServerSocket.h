@@ -10,7 +10,7 @@ class ServerSocket : private Socket
 {
  public:
 
-  ServerSocket ( int port );
+  ServerSocket ( std::string host, int port );
   ServerSocket (){};
   virtual ~ServerSocket();
 
@@ -21,6 +21,8 @@ class ServerSocket : private Socket
   void Recv(std::string &data){ Socket::recv(data); }
 
   void accept ( ServerSocket& );
+
+	char *GetClient(){ return Socket::clienthost; }
 
   bool is_valid(){ return Socket::is_valid(); }
   int id(){ return Socket::GetID(); }
