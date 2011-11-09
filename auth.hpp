@@ -11,9 +11,22 @@
 
 #include "defs.h"
 
+#define AUTH_SHADOW	1
+#define AUTH_PAMMONGODB	2
+
 class Auth {
-	public:
+	private:
+		const char*GetSalt(const char*);
+
+		// Authenticate user via /etc/shadow file
 		int Shadow(string,string);
+
+		// 0 = fail, 1 = succes
+		int m_auth;
+
+	public:
+		Auth(int,string,string);
+		int GetAuth(){ return m_auth; }
 };
 
 #endif

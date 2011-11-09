@@ -1,5 +1,39 @@
 #include "auth.hpp"
 
+Auth::Auth(int type, string user, string pass){
+	// By default, we don't allow successful authentication
+	m_auth = 0;
+
+	if(type == AUTH_SHADOW)
+		m_auth = Shadow(user, pass);
+}
+
+/**
+ * GetSalt()
+ * Returns actual salt (everything before encrypted password) from shadow entry
+ *
+ * 4 $'s - opts not null, non-DES
+ * 3 $'s - opts null, non-DES
+ * 2 $'s - DES cipher, opts null
+ **/
+const char *Auth::GetSalt(const char *pwdp){
+	string tmp(pwdp);
+	string salt;
+	salt.resize(256);
+
+	size_t pos = tmp.find("rounds=");
+
+	if(pos != string::npos){
+		pos = tmp.find("$", pos);
+		pos = tmp.find("$", pos);
+
+		salt = tmp.substr(0,pos);
+	} else
+		salt = tmp.substr(0, 11);
+
+	return salt.c_str();
+}
+
 /**
  * Authenticate against server's local /etc/shadow file
  *
@@ -21,6 +55,8 @@ int Auth::Shadow(string user, string pass){
 
 	// Attempt to load user information from shadow file into structure
 	if((spw = getspnam(user.data())) != (struct spwd*)0){
+		LOG(("Salt for %s found: %s", user.data(), GetSalt(spw->sp_pwdp)));
+
 		// Copy first 11 characters of user's password field ($salt$password)
 		strncat(salt, spw->sp_pwdp, 11);
 
