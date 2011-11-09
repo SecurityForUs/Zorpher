@@ -52,7 +52,7 @@
 #endif
 
 // Function to use syslog
-static void SYSLOG(char *f, ...){
+static void SYSLOG(const char *f, ...){
 	char buffer[256];
 
 	va_list args;
