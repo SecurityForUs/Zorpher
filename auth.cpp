@@ -48,6 +48,8 @@ int Auth::Shadow(string user, string pass){
 
 	// Typical salts are only 11 characters long in /etc/shadow
 	char *salt = new char[256];
+
+	// Empty out salt buffer (memory management practice)
 	memset(salt, '\0', sizeof(salt));
 
 	// Success?  (default: no)
