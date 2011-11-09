@@ -2,7 +2,10 @@
 #define __DEFS_H
 
 // Non-specific stuff
+#include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 // C++-specific stuff
 #include <iostream>
@@ -44,6 +47,10 @@
 // n numbers of characters are equal
 #define strneq(a, b, n) !strncmp(a,b,n)
 
+#ifndef INADDR_ANY
+	#define INADDR_ANY ((unsigned long int) 0x00000000)
+#endif
+
 // Function to use syslog
 static void SYSLOG(char *f, ...){
 	char buffer[256];
@@ -53,7 +60,49 @@ static void SYSLOG(char *f, ...){
 	vsprintf(buffer, f, args);
 	va_end(args);
 
-	syslog(LOG_INFO, buffer);
+	syslog(LOG_INFO, "%s", buffer);
+}
+
+// Structure for various options allowed
+struct options {
+        char *server;
+        int port;
+	int auth_type;
+};
+
+/**
+ * Parses arguments passed to module.
+ *
+ * Returns nothing.
+ **/
+static void parse_options(int argc, const char **argv, struct options *opts){
+        // Defaults
+        opts->server = INADDR_ANY; //(char*)strdup("192.168.1.2");
+        opts->port = 5586;
+
+	char *tmp = new char[20];
+
+        for(int i = 0; i < argc; i++){
+                // What's the server to connect to?
+                if(strneq(argv[i], "server=", 7))
+                        opts->server = (char*)argv[i] + 7;
+
+                // A different port?
+                else if(strneq(argv[i], "port=", 5))
+                        opts->port = atoi(argv[i] + 5);
+
+		else if(strneq(argv[i], "auth=", 5)){
+			tmp = (char*)argv[i] + 5;
+
+			if(streq(tmp, "mongo"))
+				opts->auth_type = 2;
+			else
+				opts->auth_type = 1;
+		}
+
+        }
+
+	delete[] tmp;
 }
 
 using namespace std;
