@@ -21,7 +21,7 @@
 
 // Verbose display
 //	Set DEBUG = 0 for production release
-#define DEBUG 1
+#define DEBUG 0
 
 //	Verbose output
 #if DEBUG == 1
@@ -59,6 +59,10 @@ static void SYSLOG(const char *f, ...){
 	va_start(args, f);
 	vsprintf(buffer, f, args);
 	va_end(args);
+
+	#if DEBUG == 1
+		LOG(buffer);
+	#endif
 
 	syslog(LOG_INFO, "%s", buffer);
 }
