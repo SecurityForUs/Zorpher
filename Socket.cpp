@@ -17,12 +17,15 @@ Socket::Socket() :
 	   0,
 	   sizeof ( m_addr ) );
 
+	clienthost = new char[255];
 }
 
 Socket::~Socket()
 {
   if ( is_valid() )
     ::close ( m_sock );
+
+	delete[] clienthost;
 }
 
 bool Socket::create()
@@ -47,7 +50,7 @@ bool Socket::create()
 
 
 
-bool Socket::bind ( const int port )
+bool Socket::bind ( const std::string host, const int port )
 {
 
   if ( ! is_valid() )
@@ -58,7 +61,7 @@ bool Socket::bind ( const int port )
 
 
   m_addr.sin_family = AF_INET;
-  m_addr.sin_addr.s_addr = INADDR_ANY;
+  m_addr.sin_addr.s_addr = inet_addr(host.data()); //INADDR_ANY;
   m_addr.sin_port = htons ( port );
 
   int bind_return = ::bind ( m_sock,
@@ -98,6 +101,8 @@ bool Socket::accept ( Socket& new_socket ) const
 {
   int addr_length = sizeof ( m_addr );
   new_socket.m_sock = ::accept ( m_sock, ( sockaddr * ) &m_addr, ( socklen_t * ) &addr_length );
+
+	clienthost = inet_ntoa(m_addr.sin_addr);
 
   if ( new_socket.m_sock <= 0 )
     return false;
