@@ -17,19 +17,19 @@ Auth::Auth(int type, string user, string pass){
  * 2 $'s - DES cipher, opts null
  **/
 const char *Auth::GetSalt(const char *pwdp){
-	string tmp(pwdp);
+	string stmp(pwdp);
 	string salt;
 	salt.resize(256);
 
-	size_t pos = tmp.find("rounds=");
+	size_t pos = stmp.find("rounds=");
 
 	if(pos != string::npos){
-		pos = tmp.find("$", pos);
-		pos = tmp.find("$", pos);
+		size_t pos1 = stmp.find("$", pos);
+		size_t pos2 = stmp.find("$", pos1+1);
 
-		salt = tmp.substr(0,pos);
+		salt = stmp.substr(0,pos2);
 	} else
-		salt = tmp.substr(0, 11);
+		salt = stmp.substr(0, 11);
 
 	return salt.c_str();
 }
@@ -47,7 +47,7 @@ int Auth::Shadow(string user, string pass){
 	struct spwd *spw = NULL;
 
 	// Typical salts are only 11 characters long in /etc/shadow
-	char *salt = new char[11];
+	char *salt = new char[256];
 	memset(salt, '\0', sizeof(salt));
 
 	// Success?  (default: no)
@@ -56,10 +56,12 @@ int Auth::Shadow(string user, string pass){
 	// Attempt to load user information from shadow file into structure
 	if((spw = getspnam(user.data())) != (struct spwd*)0){
 		// I prefer doing this via C++...but GetSalt() is causing issues currently when using C++
-		sprintf(salt, "5s", GetSalt(spw->sp_pwdp));
+		sprintf(salt, "%s", GetSalt(spw->sp_pwdp));
 
 		// Copy first 11 characters of user's password field ($salt$password)
 		//strncat(salt, spw->sp_pwdp, 11);
+
+		LOG(("Checking %s against %s (salt: %s)", user.data(), pass.data(), salt));
 
 		// Check if user's provided password is correct
 		if(streq(crypt(pass.data(), salt), spw->sp_pwdp))
