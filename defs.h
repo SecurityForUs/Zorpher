@@ -77,7 +77,7 @@ struct options {
  **/
 static void parse_options(int argc, const char **argv, struct options *opts){
         // Defaults
-        opts->server = INADDR_ANY; //(char*)strdup("192.168.1.2");
+        opts->server = INADDR_ANY;
         opts->port = 5586;
 
 	char *tmp = new char[20];
